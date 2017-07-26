@@ -7,5 +7,11 @@ caesar:
 atoi:
 	$(CC) $(CFLAGS) atoi.cc -o atoi
 
+palindrome:
+	$(CC) $(CFLAGS) palindrome.cc -o pal
+
+rpmb:
+	$(CC) $(CFLAGS) rpmb.cc -o rpmb
+
 clean:
-	rm -f caesar atoi
+	rm -f caesar atoi pal

@@ -36,7 +36,6 @@ void caesar(std::string cipher);
 #define START_NUM   0x30        // hex value of '0'
 
 //== FUNCTIONS
-
 /*
  * int parse(string cipher, int shift, string plaintext)
  * inputs: string cipher - raw input from commandline
