@@ -43,7 +43,7 @@ void caesar(std::string cipher);
            int shift - parsed caesar cipher key
            string plaintext - parsed message to be encrypted
  * returns: int error. 1 = error, 0 = no error
- * notes: main function for executing the caesar cipher encryption
+ * notes: helper function for error checking & parsing out colon
  */
 int parse(std::string cipher, int &shift, std::string &plaintext)
 {
@@ -65,6 +65,8 @@ int parse(std::string cipher, int &shift, std::string &plaintext)
 #endif
   // -> error if boundary conditions not met
   if (shift < KEYMIN || shift > KEYMAX || plaintext.size() > TXTMAX) return 1;
+  // -> error if no shift detected
+  if (shift == 0) return 2;
 
   return 0;
 }
@@ -134,7 +136,7 @@ void caesar(std::string cipher)
 
   // get all the error checking out of the way first
   int error = parse(cipher, shift, plaintext);
-  if (error == 1) {
+  if (error != 0) {
     std::cout << "bad input!" << std::endl;
     return;
   }
@@ -159,8 +161,8 @@ void tests(void) {
   caesar("0:");
   std::cout << "" << std::endl;
 
-  std::cout << "TEST CASE 2: 55:helllo wORDLD!!!" << std::endl;
-  caesar("55:helllo wORDLD!!!");
+  std::cout << "TEST CASE 2: 55:helllo wORDLD1!!" << std::endl;
+  caesar("55:helllo wORDLD1!!");
   std::cout << "" << std::endl;
 
   std::cout << "TEST CASE 3: -1000000001:no" << std::endl;
@@ -169,6 +171,10 @@ void tests(void) {
 
   std::cout << "TEST CASE 4: " << std::endl;
   caesar("");
+  std::cout << "" << std::endl;
+
+  std::cout << "TEST CASE 5: bad:baaaaad" << std::endl;
+  caesar("bad:baaaaad");
   std::cout << "" << std::endl;
 }
 
