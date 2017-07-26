@@ -16,17 +16,21 @@
 #include <string>
 
 //== DECLARATIONS
-int parse(std::string cipher, int shift, std::string plaintext);
-std::string encrypt(int shift, std::string plaintext);
+int parse(std::string cipher, int &shift, std::string &plaintext);
+std::string encrypt(int &shift, std::string &plaintext);
 void caesar(std::string cipher);
 
 //== DEFINITIONS
-#define DEBUG
+//#define DEBUG
 #define KEYMIN      -1000000000
 #define KEYMAX      1000000000
 #define TXTMAX      200
 #define ALPHA_MOD   26
 #define NUM_MOD     10
+#define UALPHA_LEN  0x1a
+#define LALPHA_LEN  0x19
+
+// don't really need these
 #define START_ULPHA 0x41        // hex value of 'A'
 #define START_LLPHA 0x61        // hex value of 'a'
 #define START_NUM   0x30        // hex value of '0'
@@ -41,7 +45,7 @@ void caesar(std::string cipher);
  * returns: int error. 1 = error, 0 = no error
  * notes: main function for executing the caesar cipher encryption
  */
-int parse(std::string cipher, int shift, std::string plaintext)
+int parse(std::string cipher, int &shift, std::string &plaintext)
 {
   // find the colon position first
   int colon = cipher.find_first_of(":");
@@ -72,12 +76,14 @@ int parse(std::string cipher, int shift, std::string plaintext)
  * returns: string of encrypted text (ciphertext)
  * notes: encryption helper function
  */
-std::string encrypt(int shift, std::string plaintext)
+std::string encrypt(int &shift, std::string &plaintext)
 {
   std::string ciphertext = "";
   int alpha_shift = shift % ALPHA_MOD;
   int num_shift = shift % NUM_MOD;
   char cipher_c;
+
+  std::cout << "a_shift, n_shift: " << alpha_shift << ", " << num_shift << std::endl;
 
   // encrypt based on the shift given
   // easy cuz we are in hex :D
@@ -88,23 +94,26 @@ std::string encrypt(int shift, std::string plaintext)
     if (c >= '0' && c <= '9') {
       cipher_c += num_shift;
       if (cipher_c > '9') cipher_c -= NUM_MOD;
-      else if (cipher_c < '0') cipher_c += NUM_MOD;
+      if (cipher_c < '0') cipher_c += NUM_MOD;
     }
 
     // if c is uppercase alphabet
     else if (c >= 'A' && c <= 'Z') {
       cipher_c += alpha_shift;
-      if (cipher_c > 'Z') cipher_c -= ALPHA_MOD;
-      else if (cipher_c < 'A') cipher_c += ALPHA_MOD;
+      if (cipher_c > 'Z') cipher_c -= UALPHA_LEN;
+      if (cipher_c < 'A') cipher_c += UALPHA_LEN;
     }
 
     // if c is lowercase alphabet
     else if (c >= 'a' && c <= 'z') {
-        cipher_c += alpha_shift;
-        if (cipher_c > 'z') cipher_c -= ALPHA_MOD;
-        else if (cipher_c < 'a') cipher_c += ALPHA_MOD;
+      cipher_c += alpha_shift;
+      if (cipher_c > 'z') cipher_c -= LALPHA_LEN;
+      if (cipher_c < 'a') cipher_c += LALPHA_LEN;
     }
 
+#ifdef DEBUG
+    std::cout << cipher_c << std::endl;
+#endif
     // otherwise
     ciphertext += cipher_c;
   }
@@ -138,12 +147,42 @@ void caesar(std::string cipher)
 }
 
 
+/*
+ * for testing purposes
+ */
+void tests(void) {
+  std::cout << "TEST CASE 0: 1:some text" << std::endl;
+  caesar("1:some text");
+  std::cout << "" << std::endl;
 
-int main(void) {
-  std::string input;
-  std::cout << "Enter input cipher:" << std::endl;
-  std::cin >> input;
-  caesar(input);
+  std::cout << "TEST CASE 1: 0:" << std::endl;
+  caesar("0:");
+  std::cout << "" << std::endl;
+
+  std::cout << "TEST CASE 2: 55:helllo wORDLD!!!" << std::endl;
+  caesar("55:helllo wORDLD!!!");
+  std::cout << "" << std::endl;
+
+  std::cout << "TEST CASE 3: -1000000001:no" << std::endl;
+  caesar("-1000000001:no");
+  std::cout << "" << std::endl;
+
+  std::cout << "TEST CASE 4: " << std::endl;
+  caesar("");
+  std::cout << "" << std::endl;
+}
+
+
+
+int main(int argc, char *argv[]) {
+  if (argc > 1) tests();
+
+  else {
+    std::string input;
+    std::cout << "Enter input cipher:" << std::endl;
+    std::getline(std::cin,input);
+    caesar(input);
+  }
 
   return 0;
 }

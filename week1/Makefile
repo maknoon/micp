@@ -4,8 +4,8 @@ CFLAGS=-Wall
 caesar:
 	$(CC) $(CFLAGS) caesar.cc -o caesar
 
-#test:
-#  $(CC) $(CFLAGS)
+atoi:
+	$(CC) $(CFLAGS) atoi.cc -o atoi
 
 clean:
-	rm -f caesar t
+	rm -f caesar atoi
