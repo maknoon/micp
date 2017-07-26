@@ -14,4 +14,4 @@ rpmb:
 	$(CC) $(CFLAGS) rpmb.cc -o rpmb
 
 clean:
-	rm -f caesar atoi pal
+	rm -f caesar atoi pal rpmb
