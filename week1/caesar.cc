@@ -1,10 +1,12 @@
-/*
+/* caesar.cc
+ * author: connie
  *
  * CAESAR CIPHER
  * simple caesar cipher encryption program.
  * program is self-contained, so no header file was included.
  *
  */
+
 // TODO: these includes don't seem to be working in new environment rn
 //       get rid of all the std:: at some point when I figure this out
 #include <cstdlib>
@@ -73,20 +75,38 @@ int parse(std::string cipher, int shift, std::string plaintext)
 std::string encrypt(int shift, std::string plaintext)
 {
   std::string ciphertext = "";
-  int alpha_mod = shift % ALPHA_MOD;
-  int num_mod = shift % NUM_MOD;
+  int alpha_shift = shift % ALPHA_MOD;
+  int num_shift = shift % NUM_MOD;
+  char cipher_c;
 
   // encrypt based on the shift given
   // easy cuz we are in hex :D
   for (char c : plaintext) {
+    cipher_c = c;
+
     // if c is a number
-    if (c >= '0' && c <= '9') // case 1
-    // if c is alphabet
-    else if (c >= 'A' && c <= 'Z') // case 2
-    else if (c >= 'a' && c <= 'z') // case 3
+    if (c >= '0' && c <= '9') {
+      cipher_c += num_shift;
+      if (cipher_c > '9') cipher_c -= NUM_MOD;
+      else if (cipher_c < '0') cipher_c += NUM_MOD;
+    }
+
+    // if c is uppercase alphabet
+    else if (c >= 'A' && c <= 'Z') {
+      cipher_c += alpha_shift;
+      if (cipher_c > 'Z') cipher_c -= ALPHA_MOD;
+      else if (cipher_c < 'A') cipher_c += ALPHA_MOD;
+    }
+
+    // if c is lowercase alphabet
+    else if (c >= 'a' && c <= 'z') {
+        cipher_c += alpha_shift;
+        if (cipher_c > 'z') cipher_c -= ALPHA_MOD;
+        else if (cipher_c < 'a') cipher_c += ALPHA_MOD;
+    }
 
     // otherwise
-    ciphertext += c;
+    ciphertext += cipher_c;
   }
 
   return ciphertext;

@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-Wall
 
 caesar:
-	$(CC) $(CFLAGS) week1.cc -o caesar
+	$(CC) $(CFLAGS) caesar.cc -o caesar
 
 #test:
 #  $(CC) $(CFLAGS)
