@@ -11,12 +11,13 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cassert>
 
 //== DECLARATIONS
 int greatest_substr(std::string str);
 
 //== DEFINITIONS
-#define DEBUG
+//#define DEBUG
 
 //== FUNCTIONS
 /*
@@ -45,11 +46,11 @@ int greatest_substr(std::string str);
      std::string greatest_substr = str.substr(start,end);
      std::cout << greatest_substr << std::endl;
 #endif
-     // go to the next biggest substring in str
-     start = std::max(charset[str[end]], max);
-     max = std::max(max, end-start+1); // see if it's bigger by the length of
+     // go to the next biggest nonrepeating substring in str
+     start = std::max(charset[str[end]], start);
+     max = std::max(max, end-start+1); // update max if it's smaller by the length of
                                        // str.substr(end,start) aka end-start+1
-     charset[str[end]] = end + 1; // update the charset with the end position + 1
+     charset[str[end]] = end + 1; // update the charset of positions with the end + 1
    }
 
    // return length of the established greatest substring with nonrepeating chars
@@ -60,26 +61,37 @@ int greatest_substr(std::string str);
  * for testing purposes
  */
 void tests(void) {
-  std::cout << "TEST CASE 0: null" << std::endl;
-  std::cout << "max len: " << longest_substr("") << std::endl;
+  std::cout << "TEST CASE 0: null == -1" << std::endl;
+  assert(longest_substr("")==-1);
+  std::cout << "test passed" << std::endl;
 
-  std::cout << "TEST CASE 1: z" << std::endl;
-  std::cout << "max len: " << longest_substr("z") << std::endl;
+  std::cout << "TEST CASE 1: z == 1" << std::endl;
+  assert(longest_substr("z")==1);
+  std::cout << "test passed" << std::endl;
 
-  std::cout << "TEST CASE 2: zzzzz" << std::endl;
-  std::cout << "max len: " << longest_substr("zzzzz") << std::endl;
+  std::cout << "TEST CASE 2: zzzzz == 1" << std::endl;
+  assert(longest_substr("zzzzz")==1);
+  std::cout << "test passed" << std::endl;
 
-  std::cout << "TEST CASE 3: zzZzz" << std::endl;
-  std::cout << "max len: " << longest_substr("zzZzz") << std::endl;
+  std::cout << "TEST CASE 3: zzZzz == 2" << std::endl;
+  assert(longest_substr("zzZzz")==2);
+  std::cout << "test passed" << std::endl;
 
-  std::cout << "TEST CASE 4: abcabca" << std::endl;
-  std::cout << "max len: " << longest_substr("abcabca") << std::endl;
+  std::cout << "TEST CASE 4: abcabca == 3" << std::endl;
+  assert(longest_substr("abcabca")==3);
+  std::cout << "test passed" << std::endl;
 
-  std::cout << "TEST CASE 5: pwwkew" << std::endl;
-  std::cout << "max len: " << longest_substr("pwwkew") << std::endl;
+  std::cout << "TEST CASE 5: pwwkew == 3" << std::endl;
+  assert(longest_substr("pwwkew")==3);
+  std::cout << "test passed" << std::endl;
 
-  std::cout << "TEST CASE 6: 5655%0as%L" << std::endl;
-  std::cout << "max len: " << longest_substr("5655%0asL") << std::endl;
+  std::cout << "TEST CASE 6: 5655%0as%L == 5" << std::endl;
+  assert(longest_substr("5655%0as%L")==5);
+  std::cout << "test passed" << std::endl;
+
+  std::cout << "TEST CASE 7: 123!456 == 7" << std::endl;
+  assert(longest_substr("123!456")==7);
+  std::cout << "test passed" << std::endl;
 }
 
 
