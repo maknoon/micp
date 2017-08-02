@@ -43,7 +43,7 @@ int greatest_substr(std::string str);
    for (end = 0; end < str.size(); end++)
    {
 #ifdef DEBUG
-     std::string greatest_substr = str.substr(start,end);
+     std::string greatest_substr = str.substr(start,end-start);
      std::cout << greatest_substr << std::endl;
 #endif
      // go to the next biggest nonrepeating substring in str
