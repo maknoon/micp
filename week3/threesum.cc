@@ -2,6 +2,9 @@
  * author: connie
  *
  * THREE SUM
+ * Given an input array S of integers, find all unique triplets (i.e. array of 3
+ * values from S) for which the values of the triplets add to 0.
+ * Ex. S = {0,1,1,-2,-1} returns {{0,1,-1},{1,1,-2}}
  *
  */
 #include "twosum.h"
@@ -41,7 +44,7 @@ void print_arr_of_arr(vector<vector<int>> v) {
 
   for (int i = 0; i < v.size(); i++) {
     cout << "triplet " << i << ": ";
-    for (int j = 0; j < v[i].size(); j++) {
+    for (int j = 0; j < 3; j++) {
       cout << v[i][j] << " ";
     }
     cout << " " << endl;
@@ -77,7 +80,7 @@ vector<vector<int>> getThreeSum(vector<int>& v)
   if (v.size() < 3) return {};
 
   // create a map to hold existing threesums
-  map<int,vector<int>> threesums;
+  map<int,int> threesums;
   vector<vector<int>> threesum_result = {};
   // for twosum operations
   vector<int> twosum_arr; int twosum_target;
@@ -91,24 +94,15 @@ vector<vector<int>> getThreeSum(vector<int>& v)
       twosum_target = v[i]; // NOTE: we want the additive inverse of this
       twosum_arr = build_arr(v,i); // build twosum_arr w/ every value except v[i]
 
-#ifdef DEBUG
-      cout << "target: " << 0-twosum_target << " arr: ";
-      print_arr(twosum_arr);
-#endif
-
-      // do a twosum on the current value
+      // do a twosum on the current value inside twosum_arr
       twosum_result = twosum.getTwoSum(twosum_arr, 0-twosum_target);
 
-#ifdef DEBUG
-      cout << "twosum result: "; print_arr(twosum_result);
-#endif
-
-      // add this obtained triplet to the return array (if it exists)
+      // add obtained triplet to the return array (if it exists)
       if (twosum_result.size() > 0) {
         threesum_result.push_back({twosum_target,twosum_result[0],twosum_result[1]});
-        threesums[twosum_target] = twosum_result; // update the map with the triplet
-        threesums[twosum_result[0]] = {twosum_target,twosum_result[1]};
-        threesums[twosum_result[1]] = {twosum_target,twosum_result[0]};
+        threesums[twosum_target] = 1; // update the map with the triplet
+        threesums[twosum_result[0]] = 1;
+        threesums[twosum_result[1]] = 1;
       }
     }
   }
