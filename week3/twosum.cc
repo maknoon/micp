@@ -11,7 +11,7 @@
 #include <sstream>
 #include <cassert>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 using namespace std;
 
@@ -35,13 +35,13 @@ vector<int> TwoSum::getTwoSum(vector<int>& nums, int target) {
 
   // use the O(n) hash map solution discussed in lecture - easy to
   // find what we want as we are iterating thru the array as well
-  unordered_map<int,int> diffs;
+  map<int,int> diffs;
   int diff;
   for (int i = 0; i < nums.size(); i++) {
     // calculate the difference between the sum and the value we are looking at
     diff = target - nums[i];
     // if the difference has already been stored in the map, we are done
-    if (diffs[diff] == nums[i]) return {diff, nums[i]};
+    if (diffs.find(diff) != diffs.end()) return {diff, nums[i]};
     // otherwise keep storing the value and differences in the table
     diffs[nums[i]] = diff;
   }
