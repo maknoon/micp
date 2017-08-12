@@ -56,13 +56,12 @@ void print_arr_of_arr(vector<vector<int>> v) {
  * vector<int> build_arr(vector<int>& v, int i)
  * inputs: v - array to build a new array from
            i - index to exclude from the new array built from v
- * output: a new array that has every value in v except the one at v[i]
+ * output: a new array that has every value in v after v[i]
  * notes: could have put this in the main function but wanted to declutter
  */
 vector<int> build_arr(vector<int>& v, int i) {
   vector<int> new_v;
-  new_v.assign(v.begin(),v.end());
-  new_v.erase(new_v.begin()+i);
+  new_v.assign(v.begin()+i,v.end());
 
   return new_v;
 }
@@ -83,26 +82,31 @@ vector<vector<int>> getThreeSum(vector<int>& v)
   map<int,int> threesums;
   vector<vector<int>> threesum_result = {};
   // for twosum operations
-  vector<int> twosum_arr; int twosum_target;
-  vector<int> twosum_result;
+  vector<int> twosum_arr;
+  int twosum_target;
+  vector<vector<int>> twosum_result;
 
   // next, iterate through the array looking for threesums
   for (int i = 0; i < v.size(); i++) {
 
-    // first make sure it is not a duplicate using our map
-    if (threesums.find(v[i]) == threesums.end()) {
-      twosum_target = v[i]; // NOTE: we want the additive inverse of this
-      twosum_arr = build_arr(v,i); // build twosum_arr w/ every value except v[i]
+    twosum_target = v[i]; // NOTE: we want the additive inverse of this
+    twosum_arr = build_arr(v,i); // build twosum_arr w/ every value except v[i]
 
-      // do a twosum on the current value inside twosum_arr
-      twosum_result = twosum.getTwoSum(twosum_arr, 0-twosum_target);
+    // find all twosums on the current value inside twosum_arr
+    twosum_result = twosum.getTwoSum(twosum_arr, 0-twosum_target);
 
-      // add obtained triplet to the return array (if it exists)
-      if (twosum_result.size() > 0) {
-        threesum_result.push_back({twosum_target,twosum_result[0],twosum_result[1]});
-        threesums[twosum_target] = 1; // update the map with the triplet
-        threesums[twosum_result[0]] = 1;
-        threesums[twosum_result[1]] = 1;
+    // add obtained triplet to the return array (if it exists)
+    if (twosum_result.size() > 0) {
+      for (int j = 0; j < twosum_result.size(); j++) {
+        // check if it's a duplicate!
+        if (threesums.find(v[i]) == threesums.end()) {
+          threesum_result.push_back({twosum_target,twosum_result[j][0],
+            twosum_result[j][1]});
+          // update the map with the triplet
+          threesums[twosum_target] = 1;
+          threesums[twosum_result[j][0]] = 1;
+          threesums[twosum_result[j][1]] = 1;
+        }
       }
     }
   }
@@ -114,37 +118,37 @@ vector<vector<int>> getThreeSum(vector<int>& v)
  * for testing purposes
  */
 void tests(void) {
-  // TEST 1
+  // TEST 1 - empty case
   cout << "TEST 1: {}" << endl;
   vector<int> v1 = {};
   vector<vector<int>> a1 = getThreeSum(v1);
   print_arr_of_arr(a1);
 
-  // TEST 2
+  // TEST 2 - array with duplicates & more than one unique triplet
   cout << endl << "TEST 2: {-1,0,1,2,-1,-4}" << endl;
   vector<int> v2 = {-1,0,1,2,-1,-4};
   vector<vector<int>> a2 = getThreeSum(v2);
   print_arr_of_arr(a2);
 
-  // TEST 3
+  // TEST 3 - array that does not have enough elements to form triplet
   cout << "TEST 3: {1,2}" << endl;
   vector<int> v3 = {1,2};
   vector<vector<int>> a3 = getThreeSum(v3);
   print_arr_of_arr(a3);
 
-  // TEST 4
+  // TEST 4 - array with no unique triplets
   cout << endl << "TEST 4: {1,2,3}" << endl;
   vector<int> v4 = {1,2,3};
   vector<vector<int>> a4 = getThreeSum(v4);
   print_arr_of_arr(a4);
 
-  // TEST 5
+  // TEST 5 - array with one unique triplet
   cout << endl << "TEST 5: {-1,-2,3}" << endl;
   vector<int> v5 = {-1,-2,3};
   vector<vector<int>> a5 = getThreeSum(v5);
   print_arr_of_arr(a5);
 
-  // TEST 6
+  // TEST 6 - array with one unique triplet but possible duplicate triplet
   cout << "TEST 6: {5600,-5600,0,0}" << endl;
   vector<int> v6 = {5600,-5600,0,0};
   vector<vector<int>> a6 = getThreeSum(v6);

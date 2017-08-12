@@ -8,7 +8,7 @@ public:
   TwoSum();
   virtual ~TwoSum();
 
-  std::vector<int> getTwoSum(std::vector<int>& nums, int target);
+  std::vector<std::vector<int>> getTwoSum(std::vector<int>& nums, int target);
 };
 
 #endif /* TWOSUM_H_ */

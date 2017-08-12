@@ -23,13 +23,13 @@ TwoSum::~TwoSum() {}
 
 //== FUNCTIONS
 /*
- * vector<int> getTwoSum(vector<int> nums, int target)
+ * vector<vector<int>> getTwoSum(vector<int> nums, int target)
  * inputs: nums - the array to evaluate for two numbers
            target - the number that is the desired sum of two values in nums
- * output: an array with two values from nums that add up to target
+ * output: an array of pairs from nums that add up to target
  * notes:
  */
-vector<int> TwoSum::getTwoSum(vector<int>& nums, int target) {
+vector<vector<int>> TwoSum::getTwoSum(vector<int>& nums, int target) {
   // take care of the null / empty nums cases first
   if (nums.size() == 0) return {};
 
@@ -37,15 +37,16 @@ vector<int> TwoSum::getTwoSum(vector<int>& nums, int target) {
   // find what we want as we are iterating thru the array as well
   map<int,int> diffs;
   int diff;
+  vector<vector<int>> twosums = {};
+
   for (int i = 0; i < nums.size(); i++) {
     // calculate the difference between the sum and the value we are looking at
     diff = target - nums[i];
-    // if the difference has already been stored in the map, we are done
-    if (diffs.find(diff) != diffs.end()) return {diff, nums[i]};
+    // if the difference has already been stored in the map, add it to the twosums
+    if (diffs.find(diff) != diffs.end()) twosums.push_back({diff, nums[i]});
     // otherwise keep storing the value and differences in the table
     diffs[nums[i]] = diff;
   }
 
-  // if we reach this point then we are unsuccessful, so return an empty array
-  return {};
+  return twosums;
 }
