@@ -119,36 +119,42 @@ vector<vector<int>> getThreeSum(vector<int>& v)
  */
 void tests(void) {
   // TEST 1 - empty case
+  // EXPECTED: empty array returned
   cout << "TEST 1: {}" << endl;
   vector<int> v1 = {};
   vector<vector<int>> a1 = getThreeSum(v1);
   print_arr_of_arr(a1);
 
   // TEST 2 - array with duplicates & more than one unique triplet
+  // EXPECTED: two unique triplets returned
   cout << endl << "TEST 2: {-1,0,1,2,-1,-4}" << endl;
   vector<int> v2 = {-1,0,1,2,-1,-4};
   vector<vector<int>> a2 = getThreeSum(v2);
   print_arr_of_arr(a2);
 
   // TEST 3 - array that does not have enough elements to form triplet
+  // EXPECTED: empty array returned
   cout << "TEST 3: {1,2}" << endl;
   vector<int> v3 = {1,2};
   vector<vector<int>> a3 = getThreeSum(v3);
   print_arr_of_arr(a3);
 
   // TEST 4 - array with no unique triplets
+  // EXPECTED: empty array returned
   cout << endl << "TEST 4: {1,2,3}" << endl;
   vector<int> v4 = {1,2,3};
   vector<vector<int>> a4 = getThreeSum(v4);
   print_arr_of_arr(a4);
 
   // TEST 5 - array with one unique triplet
+  // EXPECTED: one unique triplet returned
   cout << endl << "TEST 5: {-1,-2,3}" << endl;
   vector<int> v5 = {-1,-2,3};
   vector<vector<int>> a5 = getThreeSum(v5);
   print_arr_of_arr(a5);
 
   // TEST 6 - array with one unique triplet but possible duplicate triplet
+  // EXPECTED: one unique triplet returned
   cout << "TEST 6: {5600,-5600,0,0}" << endl;
   vector<int> v6 = {5600,-5600,0,0};
   vector<vector<int>> a6 = getThreeSum(v6);
