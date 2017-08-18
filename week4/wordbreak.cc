@@ -17,21 +17,22 @@
 using namespace std;
 
 //== DECLARATIONS
-bool wordInDict(string& word, vector<string>& dict);
-bool wordBreak_BF(string& s, vector<string>& dict);
+bool wordInDict(string word, vector<string>& dict);
+bool wordBreak_RC(string s, vector<string>& dict);
+bool wordBreak_DP(string s, vector<string>& dict); // TODO w/ map
 
 //== DEFINITIONS
 //#define DEBUG
 
 //== FUNCTIONS
 /*
- * bool wordInDict(string& word, vector<string>& dict)
+ * bool wordInDict(string word, vector<string>& dict)
  * inputs: word - word to check
            dict - the dictionary (array of strings) with valid words
  * outputs: True for valid dictionary word, False for invalid word
  * notes: helper function for iterating thru the array
  */
-bool wordInDict(string& word, vector<string>& dict)
+bool wordInDict(string word, vector<string>& dict)
 {
   if (word.size() == 0) return false;
 
@@ -47,14 +48,34 @@ bool wordInDict(string& word, vector<string>& dict)
 }
 
 /*
- * bool wordBreak_BF(string& s, vector<string>& dict)
+ * bool wordBreak_RC(string s, vector<string>& dict)
  * inputs: s - the string to check for a valid "word break"
            dict - the dictionary (array of strings) with valid words
  * outputs: True for valid word break, False for invalid word break
- * notes: the brute force solution implementation - runs in O(n x m), where
-          n = size of string and m = size of dict
+ * notes: the recursive implementation that verifies progressive substrings
  */
-bool wordBreak_BF(string& s, vector<string>& dict)
+bool wordBreak_RC(string s, vector<string>& dict)
+{
+  // base case: if nothing is remaining then we are done
+  if (s.size() == 0) return true;
+
+  // we want to iterate through the string from s(0,1) - the first substring
+  for (int i = 1; i <= s.size(); i++) {
+
+    // if substring that we are looking at is in dict, check if next part of
+    // the string is also in the dict (either as word or as compound word)
+    // by recursing on the remainder of the string
+    if (
+      wordInDict(s.substr(0,i),dict) && wordBreak_RC(s.substr(i,s.size()-i),dict)
+    ) return true;
+  }
+
+  // if we reach this point then there are still parts of string not in dict
+  return false;
+}
+
+/** main function for recursion **/
+bool wordBreak(string s, vector<string> dict)
 {
   // handle empty cases
   if (s.size() == 0 || dict.size() == 0) return false;
@@ -64,63 +85,48 @@ bool wordBreak_BF(string& s, vector<string>& dict)
     s[c] = tolower(s[c]);
   }
 
-  // helper vars for iterating thru s
-  string word = "";
-  int i = 0;
-
-  // iterate thru the string looking for words
-  while (i < s.size()) {
-    // build the word starting with each letter in the string
-    word += s[i];
-
-    // if word is valid dictionary word, trim s & reset the word
-    if (wordInDict(word, dict)) {
-      s.erase(0,word.size()); // *WORD BREAK*
-      word.clear();
-      i = 0; // start from the beginning of the string
-    }
-    else {
-      i++;
-      // if we've reached the end of the string without a match, we're done
-      if (i == s.size()) return false;
-    }
-  }
-
-  return true;
+  return wordBreak_RC(s, dict);
 }
-
 
 void test() {
   // TEST 1 - empty case
   cout << "TEST 1 - EMPTY" << endl;
   string s1 = "";
   vector<string> dict1 = {};
-  assert(wordBreak_BF(s1,dict1)==false);
+  assert(wordBreak(s1,dict1)==false);
   cout << "test passed" << endl;
 
   // TEST 2 - valid word break
   cout << "TEST 2 - EXAMPLE youenjoy" << endl;
   string s2 = "youenjoy";
   vector<string> dict2 =  {"pear","salmon","foot","prints","footprints","leave","you","sun","girl","enjoy"};
-  assert(wordBreak_BF(s2,dict2)==true);
+  assert(wordBreak(s2,dict2)==true);
   cout << "test passed" << endl;
 
   // TEST 3 - invalid word break
   cout << "TEST 3 - EXAMPLE salmonenjoyapples" << endl;
   string s3 = "salmonenjoyapples";
-  assert(wordBreak_BF(s3,dict2)==false);
+  assert(wordBreak(s3,dict2)==false);
   cout << "test passed" << endl;
 
   // TEST 4 - valid word break with capitals
   cout << "TEST 4 - EXAMPLE YouEnjoy" << endl;
   string s4 = "YouEnjoy";
-  assert(wordBreak_BF(s4,dict2)==true);
+  assert(wordBreak(s4,dict2)==true);
   cout << "test passed" << endl;
 
-  // TEST 5 - valid word break with dual words
+  // TEST 5 - valid word break with compound words (beginning)
+  vector<string> dict3 =  {"pear","salmon","foot","footprints","leave","you","sun","girl","enjoy"};
   cout << "TEST 5 - EXAMPLE youleavefootprints" << endl;
   string s5 = "youleavefootprints";
-  assert(wordBreak_BF(s5,dict2)==true);
+  assert(wordBreak(s5,dict3)==true);
+  cout << "test passed" << endl;
+
+  // TEST 6 - valid word break with compound words (ending)
+  vector<string> dict4 =  {"pear","salmon","footprints","prints","leave","you","sun","girl","enjoy"};
+  cout << "TEST 6 - EXAMPLE youleavefootprints" << endl;
+  string s6 = "youleavefootprints";
+  assert(wordBreak(s6,dict4)==true);
   cout << "test passed" << endl;
 }
 
