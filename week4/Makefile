@@ -7,5 +7,11 @@ rob: robber.cc
 wb: wordbreak.cc
 	$(CC) $(CFLAGS) wordbreak.cc -o wb
 
+ps: parentheses.cc
+	$(CC) $(CFLAGS) parentheses.cc -o ps
+
+box: boxes.cc
+	$(CC) $(CFLAGS) boxes.cc -o box
+
 clean:
-	rm -rf rob wb
+	rm -rf rob wb ps box
