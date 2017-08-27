@@ -75,28 +75,24 @@ bool palindromeLL(node *head)
   // case: null or only one -> is a palindrome
   if (!head || (!head->next)) return true;
 
-  // get the size of the LL
-  int size = 0;
-  for (node *curr = head; curr != NULL; curr = curr->next) size++;
-
-  // *** optimization: in case the LL is only 2 elements ***
-  if (size == 2) return (head->data == head->next->data);
-
-  // find middle node of LL by getting the size and dividing by 2
-  int mid = (size % 2 == 0) ? (size/2) : floor(size/2);
+  // find the middle node of the LL by using a faster 'runner' node
+  // since runner goes 2x as fast as mid, by the time runner is at the end,
+  // the mid node will be in the middle of the LL
+  node *mid = head;
+  node *runner = head;
+  while (runner && runner->next) {
+    runner = runner->next->next;
+    mid = mid->next;
+  }
 
   // use a stack for the first half of LL
   stack<char> palindrome;
-  node *c = head;
-  for (int i = 0; i < mid; i++) {
-    palindrome.push(c->data);
-    c = (c->next) ? c->next : c;
-  }
-  c = (size % 2 == 0) ? c : c->next; // ignore 'middle' node if size is odd
+  node *c;
+  for (c = head; c != mid; c = c->next) palindrome.push(c->data);
+  if (runner) c = c->next; // SKIP the middle element if size of LL is odd
 
   // check remaining half to verify palindrome
   while (c->next) {
-      //cout << c->val << ":" << p.top() << endl;
       if (c->data != palindrome.top()) return false;
       palindrome.pop();
       c = c->next;
