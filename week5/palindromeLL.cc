@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstdio>
-#include <string>
+#include <stdexcept>
 #include <stack>
 #include <cmath>
 #include <cassert>
@@ -73,7 +73,8 @@ void deleteLL(node*& head)
 bool palindromeLL(node *head)
 {
   // case: null or only one -> is a palindrome
-  if (!head || (!head->next)) return true;
+  if (!head) throw invalid_argument("null pointer detected");
+  if (!head->next) return true;
 
   // find the middle node of the LL by using a faster 'runner' node
   // since runner goes 2x as fast as mid, by the time runner is at the end,
@@ -109,7 +110,9 @@ void tests(void) {
   // TEST 1 - empty case
   // EXPECTED: true
   cout << "TEST 1: null" << endl;
-  assert(palindromeLL(NULL)==true);
+  try {
+    palindromeLL(NULL);
+  } catch (...) { }; // program will throw an exception for the null
   cout << "test passed" << endl;
 
   // TEST 2 - simplest pass case (even)
